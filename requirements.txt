@@ -7,3 +7,8 @@ python-jose[cryptography]
 python-dotenv
 azure-communication-chat
 azure-communication-identity
+Flask
+Flask-SQLAlchemy
+Flask-Cors
+PyJWT
+

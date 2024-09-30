@@ -1,9 +1,22 @@
-from passlib.context import CryptContext
+from flask import request, jsonify, current_app
+from functools import wraps
+import jwt
+from models import User
 
-pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('Authorization')
 
-def hash_password(password: str):
-    return pwd_context.hash(password)
+        if not token:
+            return jsonify({'message': 'Token is missing'}), 401
 
-def verify_password(plain_password: str, hashed_password: str):
-    return pwd_context.verify(plain_password, hashed_password)
+        try:
+            data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=["HS256"])
+            current_user = User.query.get(data['user_id'])
+        except:
+            return jsonify({'message': 'Token is invalid'}), 401
+
+        return f(current_user, *args, **kwargs)
+
+    return decorated
