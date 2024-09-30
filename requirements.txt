@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic
+bcrypt
+python-jose[cryptography]
+python-dotenv
+azure-communication-chat
+azure-communication-identity
